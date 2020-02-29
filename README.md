@@ -95,13 +95,15 @@ struct SortedDifference<LeftSequence, RightSequence, ID>: Sequence where
 }
 
 // Prints:
-// - common(1, 1)
-// - left(2)
+// - common(Left(id: 1), Right(id: 1))
+// - left(Left(id: 2))
+struct Left { var id: Int }
+struct Right { var id: Int }
 for change in SortedDifference(
-    left: [1, 2],
-    identifiedBy: { "\($0)" },
-    right: ["1"],
-    identifiedBy: { "\($0)" })
+    left: [Left(id: 1), Left(id: 2)],
+    identifiedBy: { $0.id },
+    right: [Right(id: 1)],
+    identifiedBy: { $0.id })
 {
     print(change)
 }
