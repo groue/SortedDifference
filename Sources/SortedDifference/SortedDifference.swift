@@ -117,7 +117,7 @@ public struct SortedDifference<LeftSequence: Sequence, RightSequence: Sequence, 
             self.rOpt = self.rIterator.next()
         }
         
-        public mutating func next() -> Element? {
+        public mutating func next() -> SortedDifferenceChange<LeftSequence.Element, RightSequence.Element>? {
             switch (lOpt, rOpt) {
             case let (lElem?, rElem?):
                 let (lID, rID) = (self.lID(lElem), self.rID(rElem))
@@ -142,21 +142,13 @@ public struct SortedDifference<LeftSequence: Sequence, RightSequence: Sequence, 
             }
         }
     }
-    
-    public enum Element {
-        /// An element only found in the left sequence
-        case left(LeftSequence.Element)
-        /// An element only found in the right sequence
-        case right(RightSequence.Element)
-        /// Left and right elements share a common id
-        case common(LeftSequence.Element, RightSequence.Element)
-    }
 }
 
-@available(OSX 10.15, *)
+@available(OSX 10.15, iOS 13, tvOS 13, watchOS 6, *)
 extension SortedDifference where
     LeftSequence.Element: Identifiable,
     RightSequence.Element: Identifiable,
+    LeftSequence.Element.ID: Comparable,
     ID == LeftSequence.Element.ID,
     ID == RightSequence.Element.ID
 {
@@ -225,7 +217,17 @@ extension SortedDifference where
     }
 }
 
-extension SortedDifference.Element: CustomStringConvertible {
+/// An element of the SortedDifference sequence.
+public enum SortedDifferenceChange<Left, Right> {
+    /// An element only found in the left sequence
+    case left(Left)
+    /// An element only found in the right sequence
+    case right(Right)
+    /// Left and right elements share a common id
+    case common(Left, Right)
+}
+
+extension SortedDifferenceChange: CustomStringConvertible {
     public var description: String {
         switch self {
         case let .left(lhs):
@@ -238,7 +240,7 @@ extension SortedDifference.Element: CustomStringConvertible {
     }
 }
 
-extension SortedDifference.Element: CustomDebugStringConvertible {
+extension SortedDifferenceChange: CustomDebugStringConvertible {
     public var debugDescription: String {
         switch self {
         case let .left(lhs):
@@ -251,7 +253,7 @@ extension SortedDifference.Element: CustomDebugStringConvertible {
     }
 }
 
-extension SortedDifference.Element: Equatable where
-    LeftSequence.Element: Equatable,
-    RightSequence.Element: Equatable
+extension SortedDifferenceChange: Equatable where
+    Left: Equatable,
+    Right: Equatable
 { }
