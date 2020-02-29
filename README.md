@@ -2,6 +2,16 @@
 
 This Swift package defines the `SortedDifference` sequence, which computes the difference between two sequences of identifiable elements.
 
+---
+
+**Latest release**: [version 1.0.0](https://github.com/groue/SortedDifference/tree/1.0.0) (February 29, 2020) • [Release Notes]
+
+**Requirements**: Swift 5.1+, Xcode 11.3+
+
+**Contact**: Report bugs and ask questions in [Github issues](https://github.com/groue/SortedDifference/issues).
+
+---
+
 - [Motivation]
 - [Reference]
 
@@ -149,5 +159,6 @@ All initializers share a common set of preconditions:
 
 Those preconditions are not checked. If they are not honored, the behavior of SortedDifference is undefined.
 
+[Release Notes]: CHANGELOG.md
 [Motivation]: #motivation
 [Reference]: #reference
