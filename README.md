@@ -58,3 +58,81 @@ This sample code has a low complexity, and performs as little database I/O as po
 - Each update only runs an SQL request if there are actual changes
 
 When database and server are already synchronized, a single SQL request is executed, and the database is not changed.
+
+
+# Reference
+
+SortedDifference comes with a general initializer, and two convenience initializers.
+
+The general initializer is the less constrained: it lets you provide closures that return identifiers of both left and right elements:
+
+```swift
+struct SortedDifference<LeftSequence, RightSequence, ID>: Sequence where
+    LeftSequence: Sequence,
+    RightSequence: Sequence,
+    ID: Comparable
+{
+    init(
+        left: LeftSequence,
+        identifiedBy leftID: @escaping (LeftSequence.Element) -> ID,
+        right: RightSequence,
+        identifiedBy rightID: @escaping (RightSequence.Element) -> ID)
+}
+
+// Prints 
+// - common(1, 1)
+// - left(2)
+for change in SortedDifference(
+    left: [1, 2],
+    identifiedBy: { "\($0)" },
+    right: ["1"],
+    identifiedBy: { "\($0)" })
+{
+    print(change)
+}
+```
+
+There is a convenience initializer for sequences of Identifiable types:
+
+```swift
+@available(OSX 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension SortedDifference where
+    LeftSequence.Element: Identifiable,
+    RightSequence.Element: Identifiable,
+    LeftSequence.Element.ID == ID,
+    RightSequence.Element.ID == ID
+{
+    init(left: LeftSequence, right: RightSequence)
+}
+
+// Prints:
+// - common(Left(id: 1), Right(id: 1))
+// - left(Left(id: 2))
+struct Left: Identifiable { var id: Int }
+struct Right: Identifiable { var id: Int }
+for change in SortedDifference(
+    left: [Left(id: 1), Left(id: 2)],
+    right: [Right(id: 1)])
+{
+    print(change)
+}
+```
+
+There is a convenience initializer for sequences of Comparable types:
+
+```swift
+extension SortedDifference where
+    LeftSequence.Element: Comparable,
+    RightSequence.Element == LeftSequence.Element,
+    LeftSequence.Element == ID
+{
+    init(left: LeftSequence, right: RightSequence)
+}
+
+// Prints:
+// - common(1, 1)
+// - left(2)
+for change in SortedDifference(left: [1, 2], right: [1]) {
+    print(change)
+}
+```

@@ -31,7 +31,11 @@
 ///             print("- Common: \(common)")
 ///         }
 ///     }
-public struct SortedDifference<LeftSequence: Sequence, RightSequence: Sequence, ID: Comparable>: Sequence {
+public struct SortedDifference<LeftSequence, RightSequence, ID>: Sequence where
+    LeftSequence: Sequence,
+    RightSequence: Sequence,
+    ID: Comparable
+{
     private let left: LeftSequence
     private let right: RightSequence
     private let lID: (LeftSequence.Element) -> ID
@@ -148,9 +152,8 @@ public struct SortedDifference<LeftSequence: Sequence, RightSequence: Sequence, 
 extension SortedDifference where
     LeftSequence.Element: Identifiable,
     RightSequence.Element: Identifiable,
-    LeftSequence.Element.ID: Comparable,
-    ID == LeftSequence.Element.ID,
-    ID == RightSequence.Element.ID
+    LeftSequence.Element.ID == ID,
+    RightSequence.Element.ID == ID
 {
     /// Given two sequences (left and right), this sequence tells whether
     /// elements are only found on the left, on the right, or on both sides.
@@ -177,7 +180,7 @@ extension SortedDifference where
 extension SortedDifference where
     LeftSequence.Element: Comparable,
     RightSequence.Element == LeftSequence.Element,
-    ID == LeftSequence.Element
+    LeftSequence.Element == ID
 {
     /// Given two sequences (left and right), this sequence tells whether
     /// elements are only found on the left, on the right, or on both sides.
