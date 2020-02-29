@@ -136,3 +136,10 @@ for change in SortedDifference(left: [1, 2], right: [1]) {
     print(change)
 }
 ```
+
+All initializers share a common set of preconditions:
+
+1. Both left and right sequences must be sorted by identifier.
+2. Left and right sequences must not contain two elements that share a common identifier.
+
+Those preconditions are not checked. If they are not honored, the behavior of SortedDifference is undefined.
