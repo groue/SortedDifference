@@ -21,37 +21,6 @@
 
 /// Given two sequences (left and right), this sequence tells whether elements
 /// are only found on the left, on the right, or on both sides.
-///
-/// Both input sequences do not have to share the same element type. Yet their
-/// elements must share a common comparable id.
-///
-/// Both input sequences must be sorted by this id.
-///
-/// Those ids must be unique in each sequences.
-///
-/// When elements adopt the Comparable protocol, elements are considered their
-/// own id.
-///
-/// The example below compare two sorted sequences of integers:
-///
-///     // Prints:
-///     // - Left: 1
-///     // - Common: 2
-///     // - Common: 3
-///     // - Right: 4
-///     for change in SortedDifference(
-///         left: [1, 2, 3],
-///         right: [2, 3, 4])
-///     {
-///         switch change {
-///         case let .left(left):
-///             print("- Left: \(left)")
-///         case let .right(right):
-///             print("- Right: \(right)")
-///         case let .common(common, _):
-///             print("- Common: \(common)")
-///         }
-///     }
 public struct SortedDifference<LeftSequence, RightSequence, ID>: Sequence where
     LeftSequence: Sequence,
     RightSequence: Sequence,
@@ -62,39 +31,29 @@ public struct SortedDifference<LeftSequence, RightSequence, ID>: Sequence where
     private let lID: (LeftSequence.Element) -> ID
     private let rID: (RightSequence.Element) -> ID
     
-    /// Given two sequences (left and right), this sequence tells whether
-    /// elements are only found on the left, on the right, or on both sides.
+    /// Given two sequences (left and right), returns a sequence which tells
+    /// whether elements are only found on the left, on the right, or on
+    /// both sides.
     ///
-    /// Both input sequences do not have to share the same element type. Yet
+    /// Both input sequences do not have to share the same element type, but
     /// their elements must share a common comparable id.
     ///
-    /// Both input sequences must be sorted by this id.
-    ///
-    /// Those ids must be unique in each sequences.
-    ///
-    /// The example below compare two sequences of integers:
+    /// For example:
     ///
     ///     // Prints:
-    ///     // - Left: 1
-    ///     // - Common: 2
-    ///     // - Common: 3
-    ///     // - Right: 4
+    ///     // - common(1, 1)
+    ///     // - left(2)
     ///     for change in SortedDifference(
-    ///         left: [1, 2, 3],
-    ///         identifiedBy: { $0 },
-    ///         right: [2, 3, 4],
-    ///         identifiedBy: { $0 })
+    ///         left: [1, 2],
+    ///         identifiedBy: { "\($0)" },
+    ///         right: ["1"],
+    ///         identifiedBy: { "\($0)" })
     ///     {
-    ///         switch change {
-    ///         case let .left(left):
-    ///             print("- Left: \(left)")
-    ///         case let .right(right):
-    ///             print("- Right: \(right)")
-    ///         case let .common(left, right):
-    ///             print("- Common: \(left)")
-    ///         }
+    ///         print(change)
     ///     }
     ///
+    /// - precondition: Both input sequences must be sorted by id.
+    /// - precondition: Ids must be unique in each sequences.
     /// - parameters:
     ///     - left: The left sequence.
     ///     - right: The right sequence.
@@ -176,16 +135,29 @@ extension SortedDifference where
     LeftSequence.Element.ID == ID,
     RightSequence.Element.ID == ID
 {
-    /// Given two sequences (left and right), this sequence tells whether
-    /// elements are only found on the left, on the right, or on both sides.
+    /// Given two sequences (left and right), returns a sequence which tells
+    /// whether elements are only found on the left, on the right, or on
+    /// both sides.
     ///
-    /// Both input sequences do not have to share the same element type. Yet
+    /// Both input sequences do not have to share the same element type, but
     /// their elements must share a common comparable id.
     ///
-    /// Both input sequences must be sorted by this id.
+    /// For example:
     ///
-    /// Those ids must be unique in each sequences.
+    ///     // Prints:
+    ///     // - common(Left(id: 1), Right(id: 1))
+    ///     // - left(Left(id: 2))
+    ///     struct Left: Identifiable { var id: Int }
+    ///     struct Right: Identifiable { var id: Int }
+    ///     for change in SortedDifference(
+    ///         left: [Left(id: 1), Left(id: 2)],
+    ///         right: [Right(id: 1)])
+    ///     {
+    ///         print(change)
+    ///     }
     ///
+    /// - precondition: Both input sequences must be sorted by id.
+    /// - precondition: Ids must be unique in each sequences.
     /// - parameters:
     ///     - left: The left sequence.
     ///     - right: The right sequence.
@@ -206,29 +178,17 @@ extension SortedDifference where
     /// Given two sequences (left and right), this sequence tells whether
     /// elements are only found on the left, on the right, or on both sides.
     ///
-    /// Both input sequences must be sorted, and contain unique elements.
-    ///
-    /// The example below compare two sorted sequences of integers:
+    /// For example:
     ///
     ///     // Prints:
-    ///     // - Left: 1
-    ///     // - Common: 2
-    ///     // - Common: 3
-    ///     // - Right: 4
-    ///     for change in SortedDifference(
-    ///         left: [1, 2, 3],
-    ///         right: [2, 3, 4])
-    ///     {
-    ///         switch change {
-    ///         case let .left(left):
-    ///             print("- Left: \(left)")
-    ///         case let .right(right):
-    ///             print("- Right: \(right)")
-    ///         case let .common(common, _):
-    ///             print("- Common: \(common)")
-    ///         }
+    ///     // - common(1, 1)
+    ///     // - left(2)
+    ///     for change in SortedDifference(left: [1, 2], right: [1]) {
+    ///         print(change)
     ///     }
     ///
+    /// - precondition: Both input sequences must be sorted.
+    /// - precondition: Both input sequences must contain unique elements.
     /// - parameters:
     ///     - left: The left sequence.
     ///     - right: The right sequence.

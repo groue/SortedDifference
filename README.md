@@ -84,7 +84,7 @@ struct SortedDifference<LeftSequence, RightSequence, ID>: Sequence where
         identifiedBy rightID: @escaping (RightSequence.Element) -> ID)
 }
 
-// Prints 
+// Prints:
 // - common(1, 1)
 // - left(2)
 for change in SortedDifference(
