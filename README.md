@@ -2,9 +2,24 @@
 
 This Swift package defines the `SortedDifference` sequence, which computes the difference between two sequences of identifiable elements.
 
-It eases, for example, the synchronization of a server payload and a local database.
+- [Motivation]
+- [Reference]
 
-The sample code below uses [Alamofire](https://github.com/Alamofire/Alamofire) and [GRDB](https://github.com/groue/GRDB.swift):
+## Motivation
+
+SortedDifference eases, for example, the synchronization of a server payload and a local database.
+
+The sample code below uses [Alamofire](https://github.com/Alamofire/Alamofire) and [GRDB](https://github.com/groue/GRDB.swift).
+
+It has a low complexity, and performs as little database I/O as possible:
+
+- The api players are sorted in O(n log n)
+- Database players, sorted by primary key, are fetched in a single efficient SQL request
+- The iteration of SortedDifference is O(n)
+- Each insertion and deletion runs one SQL request
+- Each update only runs an SQL request if there are actual changes
+
+When database and server are already synchronized, a single SQL request is executed, and the database is not changed.
 
 ```swift
 struct APIPlayer: Decodable, Identifiable { ... }
@@ -49,18 +64,8 @@ AF.request("https://example.com/players").responseDecodable(of: [APIPlayer].self
 }
 ```
 
-This sample code has a low complexity, and performs as little database I/O as possible:
 
-- The api players are sorted in O(n log n)
-- Database players, sorted by primary key, are fetched in a single efficient SQL request
-- The iteration of SortedDifference is O(n)
-- Each insertion and deletion runs one SQL request
-- Each update only runs an SQL request if there are actual changes
-
-When database and server are already synchronized, a single SQL request is executed, and the database is not changed.
-
-
-# Reference
+## Reference
 
 SortedDifference comes with a general initializer, and two convenience initializers.
 
@@ -143,3 +148,6 @@ All initializers share a common set of preconditions:
 2. Left and right sequences must not contain two elements that share a common identifier.
 
 Those preconditions are not checked. If they are not honored, the behavior of SortedDifference is undefined.
+
+[Motivation]: #motivation
+[Reference]: #reference
