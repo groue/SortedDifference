@@ -29,8 +29,7 @@ It has a low complexity, and performs as little database I/O as possible:
 - Each insertion and deletion runs one SQL request
 - Each update only runs an SQL request if there are actual changes
 - The whole batch is wrapped in a single database transaction, for guaranteed database integrity, and maximum speed.
-
-When database and server are already synchronized, a single SQL request is executed, and the database is not changed.
+- When database and server are already synchronized, a single SQL request is executed, and no write happens in the database.
 
 ```swift
 struct APIPlayer: Decodable, Identifiable { ... }
