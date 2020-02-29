@@ -23,11 +23,11 @@ The sample code below uses [Alamofire](https://github.com/Alamofire/Alamofire) a
 
 It has a low complexity, and performs as little database I/O as possible:
 
-- The api players are sorted in O(n log n)
-- Database players, sorted by primary key, are fetched in a single efficient SQL request
-- The iteration of SortedDifference is O(n)
-- Each insertion and deletion runs one SQL request
-- Each update only runs an SQL request if there are actual changes
+- The api players are sorted in O(n log n).
+- Database players, sorted by primary key, are fetched in a single efficient SQL request.
+- The iteration of SortedDifference is O(n).
+- Each insertion and deletion runs one SQL request.
+- Each update only runs an SQL request if there are actual changes.
 - The whole batch is wrapped in a single database transaction, for guaranteed database integrity, and maximum speed.
 - When database and server are already synchronized, a single SQL request is executed, and no write happens in the database.
 
