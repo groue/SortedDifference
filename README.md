@@ -19,7 +19,7 @@ This Swift package defines the `SortedDifference` sequence, which computes the d
 
 SortedDifference eases, for example, the synchronization of a server payload and a local database.
 
-The sample code synchronizes the list of database players with the list of players returned by an api server. It uses [Alamofire](https://github.com/Alamofire/Alamofire) and [GRDB](https://github.com/groue/GRDB.swift).
+The sample code synchronizes the list of database players with the list of players loaded from a remote API server. It uses [Alamofire](https://github.com/Alamofire/Alamofire) and [GRDB](https://github.com/groue/GRDB.swift).
 
 It has a low complexity, and performs as little database I/O as possible:
 
