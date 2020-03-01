@@ -109,23 +109,40 @@ public struct SortedDifference<LeftSequence, RightSequence, ID>: Sequence where
                 let (lID, rID) = (self.lID(lElem), self.rID(rElem))
                 if lID > rID {
                     rOpt = rIterator.next()
+                    assertIncreasingRightId(from: rID)
                     return .right(rElem)
                 } else if lID == rID {
-                    (lOpt, rOpt) = (lIterator.next(), rIterator.next())
+                    lOpt = lIterator.next()
+                    rOpt = rIterator.next()
+                    assertIncreasingLeftId(from: lID)
+                    assertIncreasingRightId(from: rID)
                     return .common(lElem, rElem)
                 } else {
                     lOpt = lIterator.next()
+                    assertIncreasingLeftId(from: lID)
                     return .left(lElem)
                 }
             case let (nil, rElem?):
                 rOpt = rIterator.next()
+                assertIncreasingRightId(from: rID(rElem))
                 return .right(rElem)
             case let (lElem?, nil):
                 lOpt = lIterator.next()
+                assertIncreasingLeftId(from: lID(lElem))
                 return .left(lElem)
             case (nil, nil):
                 return nil
             }
+        }
+        
+        @inline(__always)
+        private func assertIncreasingLeftId(from previousID: @autoclosure () -> ID) {
+            assert(lOpt.map { previousID() < lID($0) } ?? true, "Ids of left sequence elements must be stricly increasing")
+        }
+        
+        @inline(__always)
+        private func assertIncreasingRightId(from previousID: @autoclosure () -> ID) {
+            assert(rOpt.map { previousID() < rID($0) } ?? true, "Ids of right sequence elements must be stricly increasing")
         }
     }
 }

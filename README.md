@@ -79,12 +79,9 @@ AF.request("https://example.com/players").responseDecodable(of: [APIPlayer].self
 
 SortedDifference comes with a general initializer, and two convenience initializers.
 
-All initializers share a common set of preconditions:
+All initializers share a common precondition: **ids of both left and right sequences must be strictly increasing**. In other words, sequences must be sorted by id, and ids must be unique in each sequence.
 
-1. Both left and right sequences must be sorted by identifier.
-2. Left and right sequences must not contain two elements that share a common identifier.
-
-Those preconditions are not checked. If they are not honored, the behavior of SortedDifference is undefined.
+For extra safety, this precondition is checked in debug builds (as a Swift assertion). If the precondition is not honored, the behavior of SortedDifference is undefined.
 
 The general initializer is the less constrained: it lets you provide closures that return identifiers of both left and right elements:
 
