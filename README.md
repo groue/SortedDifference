@@ -4,7 +4,7 @@ This Swift package defines the `SortedDifference` sequence, which computes the d
 
 ---
 
-**Latest release**: [version 1.0.0](https://github.com/groue/SortedDifference/tree/1.0.0) (February 29, 2020) • [Release Notes]
+**Latest release**: [version 1.1.0](https://github.com/groue/SortedDifference/tree/1.1.0) (March 1, 2020) • [Release Notes]
 
 **Requirements**: Swift 5.1+, Xcode 11.3+
 
