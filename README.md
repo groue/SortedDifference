@@ -79,6 +79,13 @@ AF.request("https://example.com/players").responseDecodable(of: [APIPlayer].self
 
 SortedDifference comes with a general initializer, and two convenience initializers.
 
+All initializers share a common set of preconditions:
+
+1. Both left and right sequences must be sorted by identifier.
+2. Left and right sequences must not contain two elements that share a common identifier.
+
+Those preconditions are not checked. If they are not honored, the behavior of SortedDifference is undefined.
+
 The general initializer is the less constrained: it lets you provide closures that return identifiers of both left and right elements:
 
 ```swift
@@ -153,13 +160,6 @@ for change in SortedDifference(left: [1, 2], right: [1]) {
     print(change)
 }
 ```
-
-All initializers share a common set of preconditions:
-
-1. Both left and right sequences must be sorted by identifier.
-2. Left and right sequences must not contain two elements that share a common identifier.
-
-Those preconditions are not checked. If they are not honored, the behavior of SortedDifference is undefined.
 
 [Release Notes]: CHANGELOG.md
 [Motivation]: #motivation
