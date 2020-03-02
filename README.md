@@ -26,6 +26,7 @@ It has a low complexity, and performs as little database I/O as possible:
 - The api players are sorted in O(n log n).
 - Database players, sorted by primary key, are fetched in a single efficient SQL request.
 - The iteration of SortedDifference is O(n).
+- SortedDifference accepts sequences of different types, which means that it can handle different types for api and database players, and that we do not have to perform conversions from one to the other unless strictly necessary.
 - Each insertion and deletion runs one SQL request.
 - Each update only runs an SQL request if there are actual changes.
 - The whole batch is wrapped in a single database transaction, for guaranteed database integrity, and maximum speed.
